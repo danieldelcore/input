@@ -1,0 +1,35 @@
+{
+  "name": "electron-quick-start",
+  "version": "1.0.0",
+  "description": "A minimal Electron application",
+  "main": "main/index.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "repository": "https://github.com/electron/electron-quick-start",
+  "keywords": [
+    "Electron",
+    "quick",
+    "start",
+    "tutorial",
+    "demo"
+  ],
+  "author": "GitHub",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^5.0.2",
+    "next": "^8.1.0",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6"
+  },
+  "dependencies": {
+    "electron-is-dev": "^1.1.0",
+    "electron-next": "^3.1.5",
+    "immutable": "^4.0.0-rc.12",
+    "react-no-ssr": "^1.1.0",
+    "slate": "^0.47.3",
+    "slate-plain-serializer": "^0.7.5",
+    "slate-react": "^0.22.3",
+    "trousers": "^1.2.0"
+  }
+}
