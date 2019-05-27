@@ -1,7 +1,7 @@
 {
-  "name": "electron-quick-start",
+  "name": "input",
   "version": "1.0.0",
-  "description": "A minimal Electron application",
+  "description": "A minimalist's markdown editor",
   "main": "main/index.js",
   "scripts": {
     "start": "electron ."

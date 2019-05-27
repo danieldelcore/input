@@ -1,14 +1,105 @@
 const path = require('path')
-const { app, BrowserWindow } = require('electron')
+const { app, BrowserWindow, Menu } = require('electron')
 const prepareNext = require('electron-next')
 const isDev = require('electron-is-dev')
 
 let mainWindow
 
+const menu = Menu.buildFromTemplate([
+    {
+        label: 'App',
+        submenu: [
+            {
+                label: 'About Input',
+                click: () => console.log('About'),
+            },
+            { type: 'separator' },
+            {
+                label: 'Preferences',
+                accelerator: 'CmdOrCtrl+,',
+                click: () => console.log('Preferences'),
+            },
+            {
+                label: 'Check for Updates',
+                click: () => console.log('Check for updates...')
+            },
+            { type: 'separator' },
+            {
+                label: 'Hide Input',
+                accelerator: 'CmdOrCtrl+H',
+                click: () => console.log('Hide')
+            },
+            {
+                label: 'Hide Others',
+                accelerator: 'CmdOrCtrl+Alt+H',
+                click: () => console.log('Hide Others')
+            },
+            {
+                label: 'Quit Input',
+                accelerator: 'CmdOrCtrl+Q',
+                click: () => mainWindow.quit()
+            },
+        ]
+    },
+    {
+        label: 'File',
+        submenu: [
+            {
+                label: 'Open',
+                accelerator: 'CmdOrCtrl+O',
+                click: () => console.log('Open'),
+            },
+            { type: 'separator' },
+            {
+                label: 'Save',
+                accelerator: 'CmdOrCtrl+S',
+                click: () => console.log('Save'),
+            },
+            {
+                label: 'Save As...',
+                click: () => console.log('Save As...')
+            },
+            { type: 'separator' },
+            {
+                label: 'Close',
+                accelerator: 'CmdOrCtrl+W',
+                click: () => console.log('Close')
+            },
+        ]
+    },
+    {
+        label: 'Fromat',
+        submenu: [
+            {
+                label: 'Bold',
+                accelerator: 'CmdOrCtrl+B',
+                click: () => console.log('Bold'),
+            },
+            {
+                label: 'Emphasis',
+                accelerator: 'CmdOrCtrl+I',
+                click: () => console.log('Italics'),
+            },
+            {
+                label: 'Underline',
+                accelerator: 'CmdOrCtrl+U',
+                click: () => console.log('Underline')
+            },
+            {
+                label: 'Strike',
+                accelerator: 'CmdOrCtrl+~',
+                click: () => console.log('Strike')
+            },
+        ]
+    }
+]);
+
 function createWindow() {
+    Menu.setApplicationMenu(menu);
+
     mainWindow = new BrowserWindow({
-        width: 800,
-        height: 600,
+        width: 500,
+        height: 340,
         webPreferences: {
             nodeIntegration: true
         }
