@@ -2,6 +2,7 @@ const path = require('path')
 const { app, BrowserWindow, Menu } = require('electron')
 const prepareNext = require('electron-next')
 const isDev = require('electron-is-dev')
+const { openNewGithubIssue, aboutMenuItem } = require('electron-util');
 
 let mainWindow
 
@@ -9,9 +10,16 @@ const menu = Menu.buildFromTemplate([
     {
         label: 'App',
         submenu: [
+            aboutMenuItem({
+                copyright: 'Copyright © ZeroPoly',
+            }),
             {
-                label: 'About Input',
-                click: () => console.log('About'),
+                label: 'Give Feedback...',
+                click: () => openNewGitHubIssue({
+                    user: 'zeropoly',
+                    repo: 'input',
+                    body: ``,
+                })
             },
             { type: 'separator' },
             {
@@ -24,21 +32,11 @@ const menu = Menu.buildFromTemplate([
                 click: () => console.log('Check for updates...')
             },
             { type: 'separator' },
-            {
-                label: 'Hide Input',
-                accelerator: 'CmdOrCtrl+H',
-                click: () => console.log('Hide')
-            },
-            {
-                label: 'Hide Others',
-                accelerator: 'CmdOrCtrl+Alt+H',
-                click: () => console.log('Hide Others')
-            },
-            {
-                label: 'Quit Input',
-                accelerator: 'CmdOrCtrl+Q',
-                click: () => mainWindow.quit()
-            },
+            { role: 'hide' },
+            { role: 'hideothers' },
+            { role: 'unhide' },
+            { type: 'separator' },
+            { role: 'quit' }
         ]
     },
     {
@@ -98,8 +96,8 @@ function createWindow() {
     Menu.setApplicationMenu(menu);
 
     mainWindow = new BrowserWindow({
-        width: 500,
-        height: 340,
+        width: 380,
+        height: 500,
         webPreferences: {
             nodeIntegration: true
         }
