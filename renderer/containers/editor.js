@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
+import { ipcRenderer } from 'electron';
 import { Editor as SlateEditor } from 'slate-react';
-import { KeyUtils } from 'slate';
+import { KeyUtils, Value } from 'slate';
 import { useStyles, styleCollector } from 'trousers';
 
 const styles = styleCollector('editor')
@@ -38,6 +39,30 @@ const getType = chars => {
 }
 
 const onKeyDown = (event, editor, next) => {
+    if (event.ctrlKey || event.metaKey) {
+        switch (event.key) {
+            case 'b':
+                // This is so we dont break other cmd+ combinations
+                console.log('toggle');
+                event.preventDefault();
+                return editor.toggleMark('bold');
+            case 'i':
+                event.preventDefault();
+                return editor.toggleMark('emphasis');
+            case 'u':
+                event.preventDefault();
+                return editor.toggleMark('underline');
+            case 'x':
+                event.preventDefault();
+                return editor.toggleMark('strike');
+            case '`':
+                event.preventDefault();
+                return editor.toggleMark('code');
+            default:
+                break;
+        }
+    }
+
     switch (event.key) {
         case ' ':
             return onSpace(event, editor, next)
@@ -162,19 +187,50 @@ const renderMark = (props, editor, next) => {
     }
 }
 
-const Editor = ({ value, onChange }) => {
+const Editor = () => {
     const className = useStyles(styles);
+    const [state, setState] = useState({
+        value: Value.fromJSON({
+            'object': 'value',
+            'document': {
+                'object': 'document',
+                'nodes': [{
+                    'object': 'block',
+                    'type': 'paragraph',
+                    'nodes': [{
+                        'object': 'text',
+                        'text': '',
+                    }],
+                }],
+            },
+        })
+    });
 
     useEffect(() => KeyUtils.resetGenerator(), [])
+    useEffect(() => {
+        if (!ipcRenderer) return;
+
+        ipcRenderer.on('file-opened', (event, message) =>
+            setState({ value: message })
+        );
+
+        ipcRenderer.on('file-saved', (event, message) =>
+            ipcRenderer.send('save-file', state.value)
+        );
+
+        ipcRenderer.on('format-mark', (event, message) =>
+            console.log('FORMAT CALLED')
+        );
+    }, [])
 
     return (
         <SlateEditor
             className={className}
-            defaultValue={value}
+            defaultValue={state.value}
             onKeyDown={onKeyDown}
             renderBlock={renderBlock}
             renderMark={renderMark}
-            onChange={value => onChange(value)}
+            onChange={value => setState(value)}
             autoFocus
             spellCheck
         />

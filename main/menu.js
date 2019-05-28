@@ -42,22 +42,27 @@ const menu = [
             {
                 label: 'Bold',
                 accelerator: 'CmdOrCtrl+B',
-                click: () => console.log('Bold'),
+                click: (menuItem, mainWindow) => mainWindow.webContents.send('format-mark', 'Bold'),
             },
             {
                 label: 'Emphasis',
                 accelerator: 'CmdOrCtrl+I',
-                click: () => console.log('Italics'),
+                click: (menuItem, mainWindow) => mainWindow.webContents.send('format-mark', 'Italics'),
             },
             {
                 label: 'Underline',
                 accelerator: 'CmdOrCtrl+U',
-                click: () => console.log('Underline')
+                click: (menuItem, mainWindow) => mainWindow.webContents.send('format-mark', 'Underline')
             },
             {
                 label: 'Strike',
                 accelerator: 'CmdOrCtrl+~',
-                click: () => console.log('Strike')
+                click: (menuItem, mainWindow) => mainWindow.webContents.send('format-mark', 'Strike')
+            },
+            {
+                label: 'Code',
+                accelerator: 'CmdOrCtrl+`',
+                click: (menuItem, mainWindow) => mainWindow.webContents.send('format-mark', 'Code')
             },
         ]
     },
