@@ -1,5 +1,8 @@
 # Input
 
+## TODO
+- [] encode / decode to markdown on save / open
+- [] "Small" save dialog instead of the large one
 
 ## Resources
 Boilerplate built using this guide:
