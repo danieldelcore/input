@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import dynamic from 'next/dynamic'
 import { useGlobal, css } from 'trousers';
 import { ipcRenderer } from 'electron';
 import { Value } from 'slate';
@@ -59,8 +58,9 @@ const EditorPage = () => {
   return (
     <Editor
       value={state.value}
-      onChange={value => setState({ value })} />
-  )
+      onChange={value => setState({ value })}
+    />
+  );
 };
 
 export default EditorPage;
