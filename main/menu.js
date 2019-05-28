@@ -1,4 +1,4 @@
-const { app, shell } = require('electron')
+const { app, shell, ipcMain } = require('electron')
 const { is, openNewGitHubIssue } = require('electron-util');
 
 const { showOpenDialog } = require('./file');
@@ -14,7 +14,10 @@ const menu = [
             {
                 label: 'Open',
                 accelerator: 'CmdOrCtrl+O',
-                click: () => showOpenDialog().then(data => console.log(data)),
+                click: (menuItem, mainWindow) => {
+                    showOpenDialog()
+                        .then(data => mainWindow.webContents.send('file-opened', data))
+                },
             },
             { type: 'separator' },
             {
