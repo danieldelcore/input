@@ -21,6 +21,10 @@ function createWindow() {
         }
     });
 
+    if (isDev) {
+        mainWindow.webContents.openDevTools();
+    }
+
     const devPath = 'http://localhost:8000/editor'
     const prodPath = path.resolve('renderer/out/editor/index.html')
     const entry = isDev ? devPath : 'file://' + prodPath
