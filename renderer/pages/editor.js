@@ -11,6 +11,10 @@ const globals = css`
         box-sizing: border-box;
     }
 
+    ::-webkit-scrollbar {
+      display: none;
+    }
+
     html,
     body {
         width: 100%;
