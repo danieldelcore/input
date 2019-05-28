@@ -63,6 +63,12 @@ const menu = [
             { role: 'forcereload' },
             { role: 'toggledevtools' },
             { type: 'separator' },
+            {
+                label: 'Toggle Navigation',
+                accelerator: 'CmdOrCtrl+\\',
+                click: () => console.log('Toggle Navigation')
+            },
+            { type: 'separator' },
             { role: 'resetzoom' },
             { role: 'zoomin' },
             { role: 'zoomout' },
