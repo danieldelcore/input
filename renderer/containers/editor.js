@@ -1,22 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import { Editor as SlateEditor } from 'slate-react';
 import { Value, KeyUtils } from 'slate';
-import { useStyles, styleCollector, useGlobal, css } from 'trousers';
-
-const globals = css`
-    * {
-        box-sizing: border-box;
-    }
-
-    html,
-    body {
-        width: 100%;
-        height: 100%;
-        position: absolute;
-        margin: 0;
-    }
-`
+import { useStyles, styleCollector } from 'trousers';
 
 const styles = styleCollector('editor')
     .element`
@@ -25,23 +11,6 @@ const styles = styleCollector('editor')
         position: absolute;
         padding: 20px;
     `;
-
-KeyUtils.resetGenerator();
-
-const initialValue = Value.fromJSON({
-    'object': 'value',
-    'document': {
-        'object': 'document',
-        'nodes': [{
-            'object': 'block',
-            'type': 'paragraph',
-            'nodes': [{
-                'object': 'text',
-                'text': '',
-            }],
-        }],
-    },
-});
 
 const getType = chars => {
     switch (chars) {
@@ -175,13 +144,29 @@ const renderBlock = (props, editor, next) => {
 }
 
 const Editor = () => {
-    const [clearGlobal] = useGlobal(globals);
     const className = useStyles(styles);
+
+    useEffect(() => KeyUtils.resetGenerator())
 
     return (
         <SlateEditor
             className={className}
-            defaultValue={initialValue}
+            defaultValue={
+                Value.fromJSON({
+                    'object': 'value',
+                    'document': {
+                        'object': 'document',
+                        'nodes': [{
+                            'object': 'block',
+                            'type': 'paragraph',
+                            'nodes': [{
+                                'object': 'text',
+                                'text': '',
+                            }],
+                        }],
+                    },
+                })
+            }
             onKeyDown={onKeyDown}
             renderBlock={renderBlock}
             autoFocus
