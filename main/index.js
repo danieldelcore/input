@@ -4,6 +4,7 @@ const prepareNext = require('electron-next')
 const isDev = require('electron-is-dev')
 
 const menu = require('./menu');
+const { showOpenDialog } = require('./file');
 
 let mainWindow
 
@@ -18,7 +19,7 @@ function createWindow() {
         webPreferences: {
             nodeIntegration: true
         }
-    })
+    });
 
     const devPath = 'http://localhost:8000/editor'
     const prodPath = path.resolve('renderer/out/editor/index.html')
@@ -26,7 +27,7 @@ function createWindow() {
 
     mainWindow.loadURL(entry)
 
-    mainWindow.on('closed', function () {
+    mainWindow.on('closed', () => {
         mainWindow = null
     })
 }
@@ -39,10 +40,18 @@ app.on('ready', async () => {
     createWindow()
 })
 
-app.on('window-all-closed', function () {
+app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') app.quit()
 })
 
-app.on('activate', function () {
+app.on('activate', () => {
     if (mainWindow === null) createWindow()
 })
+
+/**
+ * https://electronjs.org/docs/api/app#event-open-url-macos
+ */
+app.on('open-file', (event, path) => {
+    console.log('Open file triggered', path);
+    showOpenDialog().then(data => console.log(data))
+});

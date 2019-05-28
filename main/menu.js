@@ -1,6 +1,8 @@
 const { app, shell } = require('electron')
 const { is, openNewGitHubIssue } = require('electron-util');
 
+const { showOpenDialog } = require('./file');
+
 const menu = [
     {
         label: app.getName(),
@@ -12,7 +14,7 @@ const menu = [
             {
                 label: 'Open',
                 accelerator: 'CmdOrCtrl+O',
-                click: () => console.log('Open'),
+                click: () => showOpenDialog().then(data => console.log(data)),
             },
             { type: 'separator' },
             {
