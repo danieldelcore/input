@@ -30,6 +30,7 @@ const menu = [
             { role: 'close' },
         ]
     },
+    { role: 'editMenu' },
     {
         label: 'Format',
         submenu: [
