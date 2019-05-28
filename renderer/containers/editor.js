@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import { Editor as SlateEditor } from 'slate-react';
-import { Value, KeyUtils } from 'slate';
+import { KeyUtils } from 'slate';
 import { useStyles, styleCollector } from 'trousers';
 
 const styles = styleCollector('editor')
@@ -143,7 +143,7 @@ const renderBlock = (props, editor, next) => {
     }
 }
 
-const Editor = () => {
+const Editor = ({ value, onChange }) => {
     const className = useStyles(styles);
 
     useEffect(() => KeyUtils.resetGenerator())
@@ -151,24 +151,10 @@ const Editor = () => {
     return (
         <SlateEditor
             className={className}
-            defaultValue={
-                Value.fromJSON({
-                    'object': 'value',
-                    'document': {
-                        'object': 'document',
-                        'nodes': [{
-                            'object': 'block',
-                            'type': 'paragraph',
-                            'nodes': [{
-                                'object': 'text',
-                                'text': '',
-                            }],
-                        }],
-                    },
-                })
-            }
+            defaultValue={value}
             onKeyDown={onKeyDown}
             renderBlock={renderBlock}
+            onChange={value => onChange(value)}
             autoFocus
             spellCheck
         />

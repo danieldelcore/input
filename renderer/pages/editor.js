@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react'
 import dynamic from 'next/dynamic'
 import { useGlobal, css } from 'trousers';
 import { ipcRenderer } from 'electron';
+import { Value } from 'slate';
+
 import { Editor } from '../containers'
 
 const globals = css`
@@ -20,6 +22,22 @@ const globals = css`
 
 const EditorPage = () => {
   const clearGlobals = useGlobal(globals);
+  const [state, setState] = useState({
+    value: Value.fromJSON({
+      'object': 'value',
+      'document': {
+        'object': 'document',
+        'nodes': [{
+          'object': 'block',
+          'type': 'paragraph',
+          'nodes': [{
+            'object': 'text',
+            'text': '',
+          }],
+        }],
+      },
+    })
+  });
 
   useEffect(() => () => clearGlobals(), [])
   useEffect(() => {
@@ -31,7 +49,9 @@ const EditorPage = () => {
   })
 
   return (
-    <Editor />
+    <Editor
+      value={state.value}
+      onChange={value => setState({ value })} />
   )
 };
 
