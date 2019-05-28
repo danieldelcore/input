@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import { ipcRenderer } from 'electron';
 import { Editor as SlateEditor } from 'slate-react';
@@ -38,28 +38,30 @@ const getType = chars => {
     }
 }
 
+const getMarkType = key => {
+    switch (key) {
+        case 'b':
+            return 'bold';
+        case 'i':
+            return 'emphasis';
+        case 'u':
+            return 'underline';
+        case 'x':
+            return 'strike';
+        case '`':
+            return 'code';
+        default:
+            return null;
+    }
+}
+
 const onKeyDown = (event, editor, next) => {
     if (event.ctrlKey || event.metaKey) {
-        switch (event.key) {
-            case 'b':
-                // This is so we dont break other cmd+ combinations
-                console.log('toggle');
-                event.preventDefault();
-                return editor.toggleMark('bold');
-            case 'i':
-                event.preventDefault();
-                return editor.toggleMark('emphasis');
-            case 'u':
-                event.preventDefault();
-                return editor.toggleMark('underline');
-            case 'x':
-                event.preventDefault();
-                return editor.toggleMark('strike');
-            case '`':
-                event.preventDefault();
-                return editor.toggleMark('code');
-            default:
-                break;
+        const mark = getMarkType(event.key);
+
+        if (mark) {
+            event.preventDefault();
+            return editor.toggleMark(mark);
         }
     }
 
@@ -77,15 +79,17 @@ const onKeyDown = (event, editor, next) => {
 
 const onSpace = (event, editor, next) => {
     const { value } = editor
-    const { selection } = value
+    const { selection, startBlock } = value
+
     if (selection.isExpanded) return next()
 
-    const { startBlock } = value
     const { start } = selection
     const chars = startBlock.text.slice(0, start.offset).replace(/\s*/g, '')
     const type = getType(chars)
+
     if (!type) return next()
     if (type === 'list-item' && startBlock.type === 'list-item') return next()
+
     event.preventDefault()
 
     editor.setBlocks(type)
@@ -100,10 +104,12 @@ const onSpace = (event, editor, next) => {
 const onBackspace = (event, editor, next) => {
     const { value } = editor
     const { selection } = value
+
     if (selection.isExpanded) return next()
     if (selection.start.offset !== 0) return next()
 
     const { startBlock } = value
+
     if (startBlock.type === 'paragraph') return next()
 
     event.preventDefault()
@@ -116,11 +122,10 @@ const onBackspace = (event, editor, next) => {
 
 const onEnter = (event, editor, next) => {
     const { value } = editor
-    const { selection } = value
+    const { selection, startBlock } = value
     const { start, end, isExpanded } = selection
-    if (isExpanded) return next()
 
-    const { startBlock } = value
+    if (isExpanded) return next()
     if (start.offset === 0 && startBlock.text.length === 0)
         return onBackspace(event, editor, next)
     if (end.offset !== startBlock.text.length) return next()
@@ -188,6 +193,7 @@ const renderMark = (props, editor, next) => {
 }
 
 const Editor = () => {
+    const editorRef = useRef(null);
     const className = useStyles(styles);
     const [state, setState] = useState({
         value: Value.fromJSON({
@@ -219,12 +225,13 @@ const Editor = () => {
         );
 
         ipcRenderer.on('format-mark', (event, message) =>
-            console.log('FORMAT CALLED')
+            editorRef.current.toggleMark(message)
         );
     }, [])
 
     return (
         <SlateEditor
+            ref={editorRef}
             className={className}
             defaultValue={state.value}
             onKeyDown={onKeyDown}

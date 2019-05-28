@@ -16,7 +16,8 @@ const menu = [
                 accelerator: 'CmdOrCtrl+O',
                 click: (menuItem, mainWindow) => {
                     showOpenDialog()
-                        .then(data => mainWindow.webContents.send('file-opened', data))
+                        .then(data =>
+                                mainWindow.webContents.send('file-opened', data))
                 },
             },
             { type: 'separator' },
@@ -29,7 +30,8 @@ const menu = [
             },
             {
                 label: 'Save As...',
-                click: (menuItem, mainWindow) => mainWindow.webContents.send('file-saved'),
+                click: (menuItem, mainWindow) =>
+                    mainWindow.webContents.send('file-saved'),
             },
             { type: 'separator' },
             { role: 'close' },
@@ -42,27 +44,32 @@ const menu = [
             {
                 label: 'Bold',
                 accelerator: 'CmdOrCtrl+B',
-                click: (menuItem, mainWindow) => mainWindow.webContents.send('format-mark', 'Bold'),
+                click: (menuItem, mainWindow) =>
+                    mainWindow.webContents.send('format-mark', 'bold'),
             },
             {
                 label: 'Emphasis',
                 accelerator: 'CmdOrCtrl+I',
-                click: (menuItem, mainWindow) => mainWindow.webContents.send('format-mark', 'Italics'),
+                click: (menuItem, mainWindow) =>
+                    mainWindow.webContents.send('format-mark', 'emphasis'),
             },
             {
                 label: 'Underline',
                 accelerator: 'CmdOrCtrl+U',
-                click: (menuItem, mainWindow) => mainWindow.webContents.send('format-mark', 'Underline')
+                click: (menuItem, mainWindow) =>
+                    mainWindow.webContents.send('format-mark', 'underline')
             },
             {
                 label: 'Strike',
-                accelerator: 'CmdOrCtrl+~',
-                click: (menuItem, mainWindow) => mainWindow.webContents.send('format-mark', 'Strike')
+                accelerator: 'CmdOrCtrl+X',
+                click: (menuItem, mainWindow) =>
+                    mainWindow.webContents.send('format-mark', 'strike')
             },
             {
                 label: 'Code',
                 accelerator: 'CmdOrCtrl+`',
-                click: (menuItem, mainWindow) => mainWindow.webContents.send('format-mark', 'Code')
+                click: (menuItem, mainWindow) =>
+                    mainWindow.webContents.send('format-mark', 'code')
             },
         ]
     },
