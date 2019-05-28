@@ -46,7 +46,11 @@ const EditorPage = () => {
     ipcRenderer.on('file-opened', (event, message) =>
       setState({ value: message })
     );
-  })
+
+    ipcRenderer.on('file-saved', (event, message) =>
+      ipcRenderer.send('save-file', state.value)
+    );
+  }, [])
 
   return (
     <Editor

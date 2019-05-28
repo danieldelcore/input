@@ -1,11 +1,11 @@
-const { dialog } = require('electron');
+const { dialog, BrowserWindow } = require('electron');
 
 const fileService = require('./file-service');
 
-const showOpenDialog = path =>
+const showOpenDialog = defaultPath =>
     new Promise((resolve) => {
         dialog.showOpenDialog({
-            defaultPath: path,
+            defaultPath,
             properties: ['openFile'],
             filters: [{
                 name: 'Files',
@@ -21,20 +21,25 @@ const showOpenDialog = path =>
         });
     });
 
-const showSaveDialog = (path, document) =>
+const showSaveDialog = (document, defaultPath = 'input.md') =>
     new Promise((resolve, reject) => {
         dialog.showSaveDialog({
-            defaultPath: path,
-        }, (filePaths) => {
-            if (!filePaths || filePaths.length === 0) {
+            broweserWindow: BrowserWindow.getFocusedWindow(),
+            defaultPath,
+            filters: [{
+                name: 'Files',
+                extensions: ['md', 'txt', 'mdx'],
+            }],
+        }, (filePath) => {
+            if (!filePath) {
                 resolve();
                 return;
             }
 
             resolve(
                 fileService
-                    .save(filePaths[0], document)
-                    .then(() => filePaths)
+                    .save(filePath, document)
+                    .then(() => filePath)
             );
         });
     });

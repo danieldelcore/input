@@ -23,11 +23,13 @@ const menu = [
             {
                 label: 'Save',
                 accelerator: 'CmdOrCtrl+S',
-                click: () => console.log('Save'),
+                click: (menuItem, mainWindow) => {
+                    mainWindow.webContents.send('file-saved')
+                },
             },
             {
                 label: 'Save As...',
-                click: () => console.log('Save As...')
+                click: (menuItem, mainWindow) => mainWindow.webContents.send('file-saved'),
             },
             { type: 'separator' },
             { role: 'close' },

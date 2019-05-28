@@ -1,10 +1,10 @@
 const path = require('path')
-const { app, BrowserWindow, Menu } = require('electron')
+const { app, ipcMain, BrowserWindow, Menu } = require('electron')
 const prepareNext = require('electron-next')
 const isDev = require('electron-is-dev')
 
 const menu = require('./menu');
-const { showOpenDialog } = require('./file');
+const { showOpenDialog, showSaveDialog } = require('./file');
 
 let mainWindow
 
@@ -52,6 +52,10 @@ app.on('activate', () => {
  * https://electronjs.org/docs/api/app#event-open-url-macos
  */
 app.on('open-file', (event, path) => {
-    console.log('Open file triggered', path);
     showOpenDialog().then(data => console.log(data))
+});
+
+ipcMain.on('save-file', (event, document) => {
+    showSaveDialog(document)
+        .catch(err => console.log(err));
 });
