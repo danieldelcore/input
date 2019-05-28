@@ -146,7 +146,7 @@ const renderBlock = (props, editor, next) => {
 const Editor = ({ value, onChange }) => {
     const className = useStyles(styles);
 
-    useEffect(() => KeyUtils.resetGenerator())
+    useEffect(() => KeyUtils.resetGenerator(), [])
 
     return (
         <SlateEditor
