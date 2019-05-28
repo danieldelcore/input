@@ -143,6 +143,25 @@ const renderBlock = (props, editor, next) => {
     }
 }
 
+const renderMark = (props, editor, next) => {
+    const { attributes, children, mark } = props
+
+    switch (mark.type) {
+        case 'bold':
+            return <strong {...attributes}>{children}</strong>
+        case 'emphasis':
+            return <em {...attributes}>{children}</em>
+        case 'underline':
+            return <u {...attributes}>{children}</u>
+        case 'strike':
+            return <strike {...attributes}>{children}</strike>
+        case 'code':
+            return <code {...attributes}>{children}</code>
+        default:
+            return next()
+    }
+}
+
 const Editor = ({ value, onChange }) => {
     const className = useStyles(styles);
 
@@ -154,6 +173,7 @@ const Editor = ({ value, onChange }) => {
             defaultValue={value}
             onKeyDown={onKeyDown}
             renderBlock={renderBlock}
+            renderMark={renderMark}
             onChange={value => onChange(value)}
             autoFocus
             spellCheck
