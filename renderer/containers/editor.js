@@ -184,6 +184,8 @@ const Editor = () => {
             defaultValue={initialValue}
             onKeyDown={onKeyDown}
             renderBlock={renderBlock}
+            autoFocus
+            spellCheck
         />
     );
 }
