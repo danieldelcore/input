@@ -23,6 +23,8 @@ const getType = chars => {
         case '-':
         case '+':
             return 'list-item';
+        case '1.':
+            return 'ordered-list-item';
         case '>':
             return 'block-quote';
         case '#':
@@ -102,6 +104,10 @@ const onSpace = (event, editor, next) => {
         editor.wrapBlock('bulleted-list');
     }
 
+    if (type === 'ordered-list-item') {
+        editor.wrapBlock('ordered-list');
+    }
+
     editor.moveFocusToStartOfNode(startBlock).delete();
 };
 
@@ -121,6 +127,10 @@ const onBackspace = (event, editor, next) => {
 
     if (startBlock.type === 'list-item') {
         editor.unwrapBlock('bulleted-list');
+    }
+
+    if (startBlock.type === 'ordered-list-item') {
+        editor.unwrapBlock('ordered-list');
     }
 };
 
@@ -158,6 +168,8 @@ const renderBlock = (props, editor, next) => {
             return <blockquote {...attributes}>{children}</blockquote>;
         case 'bulleted-list':
             return <ul {...attributes}>{children}</ul>;
+        case 'ordered-list':
+            return <ol {...attributes}>{children}</ol>;
         case 'heading-one':
             return <h1 {...attributes}>{children}</h1>;
         case 'heading-two':
@@ -171,6 +183,7 @@ const renderBlock = (props, editor, next) => {
         case 'heading-six':
             return <h6 {...attributes}>{children}</h6>;
         case 'list-item':
+        case 'ordered-list-item':
             return <li {...attributes}>{children}</li>;
         default:
             return next();

@@ -9,10 +9,12 @@
 
 ### Syntax
 
--   [ ] support ordered lists
+-   [x] support ordered lists
 -   [ ] support nested lists
 -   [ ] support code blocks
 -   [ ] support tables
+-   [ ] Links!
+-   [ ] Images!
 -   [ ] support inline syntax input experience
 
 ## Resources
