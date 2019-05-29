@@ -1,7 +1,9 @@
-import React, { useEffect, useState } from 'react'
-import { useGlobal, css } from 'trousers';
+import React, { useEffect, useState, useRef } from "react";
+import { useGlobal, css } from "trousers";
+import { ipcRenderer } from "electron";
+import { Value } from "slate";
 
-import { Editor } from '../containers'
+import { Editor } from "../containers";
 
 const globals = css`
     * {
@@ -9,7 +11,7 @@ const globals = css`
     }
 
     ::-webkit-scrollbar {
-      display: none;
+        display: none;
     }
 
     html,
@@ -22,13 +24,56 @@ const globals = css`
 `;
 
 const EditorPage = () => {
-  const clearGlobals = useGlobal(globals);
+    const clearGlobals = useGlobal(globals);
 
-  useEffect(() => () => clearGlobals(), [])
+    const [state, setState] = useState({
+        value: Value.fromJSON({
+            object: "value",
+            document: {
+                object: "document",
+                nodes: [
+                    {
+                        object: "block",
+                        type: "paragraph",
+                        nodes: [
+                            {
+                                object: "text",
+                                text: ""
+                            }
+                        ]
+                    }
+                ]
+            }
+        })
+    });
 
-  return (
-    <Editor />
-  );
+    const editorRef = useRef(null);
+
+    useEffect(() => () => clearGlobals(), []);
+
+    useEffect(() => {
+        if (!ipcRenderer) return;
+
+        ipcRenderer.on("file-opened", (event, message) =>
+            setState({ value: message })
+        );
+
+        ipcRenderer.on("file-saved", (event, message) =>
+            ipcRenderer.send("save-file", state.value)
+        );
+
+        ipcRenderer.on("format-mark", (event, message) =>
+            editorRef.current.toggleMark(message)
+        );
+    }, []);
+
+    return (
+        <Editor
+            ref={editorRef}
+            value={state.value}
+            onChange={value => setState({ value })}
+        />
+    );
 };
 
 export default EditorPage;
