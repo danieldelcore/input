@@ -1,15 +1,24 @@
 # Input
 
 ## TODO
-- [ ] encode / decode to markdown on save / open
-- [ ] "Small" save dialog instead of the large one
-- [ ] drop nextjs for CRA. SSR is not required
-- [ ] support ordered lists
-- [ ] support nested lists
-- [ ] support code blocks
+
+-   [ ] encode / decode to markdown on save / open
+-   [ ] "Small" save dialog instead of the large one
+-   [ ] drop SSR, its not required
+-   [ ] side navigation
+
+### Syntax
+
+-   [ ] support ordered lists
+-   [ ] support nested lists
+-   [ ] support code blocks
+-   [ ] support tables
+-   [ ] support inline syntax input experience
 
 ## Resources
+
 Boilerplate built using this guide:
-- [electron-next](https://leo.im/2017/electron-next)
-- [awesome-electron](https://github.com/sindresorhus/awesome-electron)
-- [electron-util](https://github.com/sindresorhus/electron-util)
+
+-   [electron-next](https://leo.im/2017/electron-next)
+-   [awesome-electron](https://github.com/sindresorhus/awesome-electron)
+-   [electron-util](https://github.com/sindresorhus/electron-util)
