@@ -1,4 +1,4 @@
-import Document, { Head, Main, NextScript } from 'next/document'
+import Document, { Head, Main, NextScript } from 'next/document';
 import { ServerStyleRegistry, ServerProvider } from 'trousers';
 
 export default class MyDocument extends Document {
@@ -25,14 +25,12 @@ export default class MyDocument extends Document {
 
         return (
             <html>
-                <Head>
-                    {/* {this.props.styleTags} */}
-                </Head>
+                <Head>{/* {this.props.styleTags} */}</Head>
                 <body>
                     <Main />
                     <NextScript />
                 </body>
             </html>
-        )
+        );
     }
 }

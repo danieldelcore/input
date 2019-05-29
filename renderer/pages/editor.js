@@ -1,9 +1,9 @@
-import React, { useEffect, useState, useRef } from "react";
-import { useGlobal, css } from "trousers";
-import { ipcRenderer } from "electron";
-import { Value } from "slate";
+import React, { useEffect, useState, useRef } from 'react';
+import { useGlobal, css } from 'trousers';
+import { ipcRenderer } from 'electron';
+import { Value } from 'slate';
 
-import { Editor } from "../containers";
+import { Editor } from '../containers';
 
 const globals = css`
     * {
@@ -28,23 +28,23 @@ const EditorPage = () => {
 
     const [state, setState] = useState({
         value: Value.fromJSON({
-            object: "value",
+            object: 'value',
             document: {
-                object: "document",
+                object: 'document',
                 nodes: [
                     {
-                        object: "block",
-                        type: "paragraph",
+                        object: 'block',
+                        type: 'paragraph',
                         nodes: [
                             {
-                                object: "text",
-                                text: ""
-                            }
-                        ]
-                    }
-                ]
-            }
-        })
+                                object: 'text',
+                                text: '',
+                            },
+                        ],
+                    },
+                ],
+            },
+        }),
     });
 
     const editorRef = useRef(null);
@@ -54,16 +54,16 @@ const EditorPage = () => {
     useEffect(() => {
         if (!ipcRenderer) return;
 
-        ipcRenderer.on("file-opened", (event, message) =>
-            setState({ value: message })
+        ipcRenderer.on('file-opened', (event, message) =>
+            setState({ value: message }),
         );
 
-        ipcRenderer.on("file-saved", (event, message) =>
-            ipcRenderer.send("save-file", state.value)
+        ipcRenderer.on('file-saved', (event, message) =>
+            ipcRenderer.send('save-file', state.value),
         );
 
-        ipcRenderer.on("format-mark", (event, message) =>
-            editorRef.current.toggleMark(message)
+        ipcRenderer.on('format-mark', (event, message) =>
+            editorRef.current.toggleMark(message),
         );
     }, []);
 

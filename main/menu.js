@@ -1,4 +1,4 @@
-const { app, shell, ipcMain } = require('electron')
+const { app, shell, ipcMain } = require('electron');
 const { is, openNewGitHubIssue } = require('electron-util');
 
 const { showOpenDialog } = require('./file');
@@ -6,7 +6,7 @@ const { showOpenDialog } = require('./file');
 const menu = [
     {
         label: app.getName(),
-        role: 'appMenu'
+        role: 'appMenu',
     },
     {
         label: 'File',
@@ -15,9 +15,9 @@ const menu = [
                 label: 'Open',
                 accelerator: 'CmdOrCtrl+O',
                 click: (menuItem, mainWindow) => {
-                    showOpenDialog()
-                        .then(data =>
-                                mainWindow.webContents.send('file-opened', data))
+                    showOpenDialog().then(data =>
+                        mainWindow.webContents.send('file-opened', data),
+                    );
                 },
             },
             { type: 'separator' },
@@ -25,7 +25,7 @@ const menu = [
                 label: 'Save',
                 accelerator: 'CmdOrCtrl+S',
                 click: (menuItem, mainWindow) => {
-                    mainWindow.webContents.send('file-saved')
+                    mainWindow.webContents.send('file-saved');
                 },
             },
             {
@@ -35,7 +35,7 @@ const menu = [
             },
             { type: 'separator' },
             { role: 'close' },
-        ]
+        ],
     },
     { role: 'editMenu' },
     {
@@ -57,21 +57,21 @@ const menu = [
                 label: 'Underline',
                 accelerator: 'CmdOrCtrl+U',
                 click: (menuItem, mainWindow) =>
-                    mainWindow.webContents.send('format-mark', 'underline')
+                    mainWindow.webContents.send('format-mark', 'underline'),
             },
             {
                 label: 'Strike',
                 accelerator: 'CmdOrCtrl+X',
                 click: (menuItem, mainWindow) =>
-                    mainWindow.webContents.send('format-mark', 'strike')
+                    mainWindow.webContents.send('format-mark', 'strike'),
             },
             {
                 label: 'Code',
                 accelerator: 'CmdOrCtrl+`',
                 click: (menuItem, mainWindow) =>
-                    mainWindow.webContents.send('format-mark', 'code')
+                    mainWindow.webContents.send('format-mark', 'code'),
             },
-        ]
+        ],
     },
     {
         label: 'View',
@@ -83,45 +83,44 @@ const menu = [
             {
                 label: 'Toggle Navigation',
                 accelerator: 'CmdOrCtrl+\\',
-                click: () => console.log('Toggle Navigation')
+                click: () => console.log('Toggle Navigation'),
             },
             { type: 'separator' },
             { role: 'resetzoom' },
             { role: 'zoomin' },
             { role: 'zoomout' },
             { type: 'separator' },
-            { role: 'togglefullscreen' }
-        ]
+            { role: 'togglefullscreen' },
+        ],
     },
     {
         label: 'Window',
         submenu: [
             { role: 'minimize' },
             { role: 'zoom' },
-            ...(is.macos) ? [
-                { type: 'separator' },
-                { role: 'front' },
-            ] : [
-                    { role: 'close' }
-                ]
-        ]
+            ...(is.macos
+                ? [{ type: 'separator' }, { role: 'front' }]
+                : [{ role: 'close' }]),
+        ],
     },
     {
         role: 'help',
         submenu: [
             {
                 label: 'Learn More...',
-                click: () => shell.openExternalSync('https://github.com/zeropoly/input')
+                click: () =>
+                    shell.openExternalSync('https://github.com/zeropoly/input'),
             },
             {
                 label: 'Give Feedback...',
-                click: () => openNewGitHubIssue({
-                    user: 'zeropoly',
-                    repo: 'input'
-                })
-            }
-        ]
-    }
+                click: () =>
+                    openNewGitHubIssue({
+                        user: 'zeropoly',
+                        repo: 'input',
+                    }),
+            },
+        ],
+    },
 ];
 
 module.exports = menu;

@@ -12,7 +12,7 @@ const open = path =>
 
 const save = (path, data) =>
     new Promise((resolve, reject) => {
-        fs.writeFile(path, data, 'utf-8', (err) => {
+        fs.writeFile(path, data, 'utf-8', err => {
             if (err) reject(err);
             resolve();
         });
