@@ -5,10 +5,13 @@ import React, {
     useEffect,
     useImperativeHandle,
 } from 'react';
-import ReactDOM from 'react-dom';
-import { Editor as SlateEditor } from 'slate-react';
 import { KeyUtils, Value } from 'slate';
+import { Editor as SlateEditor } from 'slate-react';
 import { useStyles, styleCollector } from 'trousers';
+
+import schema from './schema';
+import { getMarkType, renderMark } from './marks';
+import { getBlockType, renderBlock } from './blocks';
 
 const styles = styleCollector('editor').element`
         width: 100%;
@@ -16,108 +19,6 @@ const styles = styleCollector('editor').element`
         position: absolute;
         padding: 20px;
     `;
-
-const getType = chars => {
-    switch (chars) {
-        case '*':
-        case '-':
-        case '+':
-        case '1.':
-        case '[ ]':
-        case '[x]':
-            return 'list-item';
-        case '1.':
-            return 'ordered-list-item';
-        case '>':
-            return 'block-quote';
-        case '#':
-            return 'heading-one';
-        case '##':
-            return 'heading-two';
-        case '###':
-            return 'heading-three';
-        case '####':
-            return 'heading-four';
-        case '#####':
-            return 'heading-five';
-        case '######':
-            return 'heading-six';
-        case '---':
-            return 'separator';
-        default:
-            return null;
-    }
-};
-
-const getMarkType = key => {
-    switch (key) {
-        case 'b':
-            return 'bold';
-        case 'i':
-            return 'emphasis';
-        case 'u':
-            return 'underline';
-        case 'x':
-            return 'strike';
-        case '`':
-            return 'code';
-        default:
-            return null;
-    }
-};
-
-const renderBlock = (props, editor, next) => {
-    const { attributes, children, node } = props;
-
-    switch (node.type) {
-        case 'block-quote':
-            return <blockquote {...attributes}>{children}</blockquote>;
-        case 'bulleted-list':
-            return <ul {...attributes}>{children}</ul>;
-        case 'ordered-list':
-            return <ol {...attributes}>{children}</ol>;
-        case 'heading-one':
-            return <h1 {...attributes}>{children}</h1>;
-        case 'heading-two':
-            return <h2 {...attributes}>{children}</h2>;
-        case 'heading-three':
-            return <h3 {...attributes}>{children}</h3>;
-        case 'heading-four':
-            return <h4 {...attributes}>{children}</h4>;
-        case 'heading-five':
-            return <h5 {...attributes}>{children}</h5>;
-        case 'heading-six':
-            return <h6 {...attributes}>{children}</h6>;
-        case 'list-item':
-        case 'ordered-list-item':
-            return <li {...attributes}>{children}</li>;
-        case 'separator':
-            return <hr {...attributes} />;
-        default:
-            return next();
-    }
-};
-
-const renderMark = (props, editor, next) => {
-    const { attributes, children, mark } = props;
-
-    switch (mark.type) {
-        case 'bold':
-            return <strong {...attributes}>{children}</strong>;
-        case 'emphasis':
-            return <em {...attributes}>{children}</em>;
-        case 'underline':
-            return <u {...attributes}>{children}</u>;
-        case 'strike':
-            return <strike {...attributes}>{children}</strike>;
-        case 'code':
-            return <code {...attributes}>{children}</code>;
-        case 'anchor':
-            return <a {...attributes}>{children}</a>;
-        default:
-            return next();
-    }
-};
 
 const onKeyDown = (event, editor, next) => {
     if (event.ctrlKey || event.metaKey) {
@@ -149,7 +50,7 @@ const onSpace = (event, editor, next) => {
 
     const { start } = selection;
     const chars = startBlock.text.slice(0, start.offset).replace(/\s*/g, '');
-    const type = getType(chars);
+    const type = getBlockType(chars);
 
     if (!type) return next();
     if (type === 'list-item' && startBlock.type === 'list-item') return next();
@@ -225,17 +126,6 @@ const onEnter = (event, editor, next) => {
 
     event.preventDefault();
     editor.splitBlock().setBlocks('paragraph');
-};
-
-const schema = {
-    blocks: {
-        separator: {
-            isVoid: true,
-        },
-        image: {
-            isVoid: true,
-        },
-    },
 };
 
 const Editor = forwardRef(({ onChange, value }, ref) => {

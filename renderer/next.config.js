@@ -10,7 +10,7 @@ module.exports = {
         // when it's exporting the static bundle for the use
         // in the production version of your app
         return {
-            '/editor': { page: '/editor' },
+            '/main': { page: '/main' },
         };
     },
 };

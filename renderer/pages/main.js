@@ -3,7 +3,7 @@ import { useGlobal, css } from 'trousers';
 import { ipcRenderer } from 'electron';
 import { Value } from 'slate';
 
-import { Editor } from '../containers';
+import { Editor } from '../components';
 
 const globals = css`
     * {
@@ -23,7 +23,7 @@ const globals = css`
     }
 `;
 
-const EditorPage = () => {
+const MainPage = () => {
     const clearGlobals = useGlobal(globals);
 
     const [state, setState] = useState({
@@ -76,4 +76,4 @@ const EditorPage = () => {
     );
 };
 
-export default EditorPage;
+export default MainPage;

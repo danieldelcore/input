@@ -25,8 +25,8 @@ function createWindow() {
         mainWindow.webContents.openDevTools();
     }
 
-    const devPath = 'http://localhost:8000/editor';
-    const prodPath = path.resolve('renderer/out/editor/index.html');
+    const devPath = 'http://localhost:8000/main';
+    const prodPath = path.resolve('renderer/out/main/index.html');
     const entry = isDev ? devPath : 'file://' + prodPath;
 
     mainWindow.loadURL(entry);
