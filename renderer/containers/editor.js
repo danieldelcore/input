@@ -22,6 +22,9 @@ const getType = chars => {
         case '*':
         case '-':
         case '+':
+        case '1.':
+        case '[ ]':
+        case '[x]':
             return 'list-item';
         case '1.':
             return 'ordered-list-item';
@@ -39,6 +42,8 @@ const getType = chars => {
             return 'heading-five';
         case '######':
             return 'heading-six';
+        case '---':
+            return 'separator';
         default:
             return null;
     }
@@ -58,6 +63,59 @@ const getMarkType = key => {
             return 'code';
         default:
             return null;
+    }
+};
+
+const renderBlock = (props, editor, next) => {
+    const { attributes, children, node } = props;
+
+    switch (node.type) {
+        case 'block-quote':
+            return <blockquote {...attributes}>{children}</blockquote>;
+        case 'bulleted-list':
+            return <ul {...attributes}>{children}</ul>;
+        case 'ordered-list':
+            return <ol {...attributes}>{children}</ol>;
+        case 'heading-one':
+            return <h1 {...attributes}>{children}</h1>;
+        case 'heading-two':
+            return <h2 {...attributes}>{children}</h2>;
+        case 'heading-three':
+            return <h3 {...attributes}>{children}</h3>;
+        case 'heading-four':
+            return <h4 {...attributes}>{children}</h4>;
+        case 'heading-five':
+            return <h5 {...attributes}>{children}</h5>;
+        case 'heading-six':
+            return <h6 {...attributes}>{children}</h6>;
+        case 'list-item':
+        case 'ordered-list-item':
+            return <li {...attributes}>{children}</li>;
+        case 'separator':
+            return <hr {...attributes} />;
+        default:
+            return next();
+    }
+};
+
+const renderMark = (props, editor, next) => {
+    const { attributes, children, mark } = props;
+
+    switch (mark.type) {
+        case 'bold':
+            return <strong {...attributes}>{children}</strong>;
+        case 'emphasis':
+            return <em {...attributes}>{children}</em>;
+        case 'underline':
+            return <u {...attributes}>{children}</u>;
+        case 'strike':
+            return <strike {...attributes}>{children}</strike>;
+        case 'code':
+            return <code {...attributes}>{children}</code>;
+        case 'anchor':
+            return <a {...attributes}>{children}</a>;
+        default:
+            return next();
     }
 };
 
@@ -98,17 +156,25 @@ const onSpace = (event, editor, next) => {
 
     event.preventDefault();
 
-    editor.setBlocks(type);
+    if (type === 'separator') {
+        editor
+            .moveFocusToStartOfNode(startBlock)
+            .delete()
+            .setBlocks({ type: 'separator' })
+            .insertBlock('paragraph');
+    } else {
+        editor.setBlocks(type);
 
-    if (type === 'list-item') {
-        editor.wrapBlock('bulleted-list');
+        if (type === 'list-item') {
+            editor.wrapBlock('bulleted-list');
+        }
+
+        if (type === 'ordered-list-item') {
+            editor.wrapBlock('ordered-list');
+        }
+
+        editor.moveFocusToStartOfNode(startBlock).delete();
     }
-
-    if (type === 'ordered-list-item') {
-        editor.wrapBlock('ordered-list');
-    }
-
-    editor.moveFocusToStartOfNode(startBlock).delete();
 };
 
 const onBackspace = (event, editor, next) => {
@@ -151,7 +217,8 @@ const onEnter = (event, editor, next) => {
         startBlock.type !== 'heading-four' &&
         startBlock.type !== 'heading-five' &&
         startBlock.type !== 'heading-six' &&
-        startBlock.type !== 'block-quote'
+        startBlock.type !== 'block-quote' &&
+        startBlock.type !== 'separator'
     ) {
         return next();
     }
@@ -160,53 +227,15 @@ const onEnter = (event, editor, next) => {
     editor.splitBlock().setBlocks('paragraph');
 };
 
-const renderBlock = (props, editor, next) => {
-    const { attributes, children, node } = props;
-
-    switch (node.type) {
-        case 'block-quote':
-            return <blockquote {...attributes}>{children}</blockquote>;
-        case 'bulleted-list':
-            return <ul {...attributes}>{children}</ul>;
-        case 'ordered-list':
-            return <ol {...attributes}>{children}</ol>;
-        case 'heading-one':
-            return <h1 {...attributes}>{children}</h1>;
-        case 'heading-two':
-            return <h2 {...attributes}>{children}</h2>;
-        case 'heading-three':
-            return <h3 {...attributes}>{children}</h3>;
-        case 'heading-four':
-            return <h4 {...attributes}>{children}</h4>;
-        case 'heading-five':
-            return <h5 {...attributes}>{children}</h5>;
-        case 'heading-six':
-            return <h6 {...attributes}>{children}</h6>;
-        case 'list-item':
-        case 'ordered-list-item':
-            return <li {...attributes}>{children}</li>;
-        default:
-            return next();
-    }
-};
-
-const renderMark = (props, editor, next) => {
-    const { attributes, children, mark } = props;
-
-    switch (mark.type) {
-        case 'bold':
-            return <strong {...attributes}>{children}</strong>;
-        case 'emphasis':
-            return <em {...attributes}>{children}</em>;
-        case 'underline':
-            return <u {...attributes}>{children}</u>;
-        case 'strike':
-            return <strike {...attributes}>{children}</strike>;
-        case 'code':
-            return <code {...attributes}>{children}</code>;
-        default:
-            return next();
-    }
+const schema = {
+    blocks: {
+        separator: {
+            isVoid: true,
+        },
+        image: {
+            isVoid: true,
+        },
+    },
 };
 
 const Editor = forwardRef(({ onChange, value }, ref) => {
@@ -227,6 +256,7 @@ const Editor = forwardRef(({ onChange, value }, ref) => {
             onKeyDown={onKeyDown}
             renderBlock={renderBlock}
             renderMark={renderMark}
+            schema={schema}
             onChange={value => onChange(value)}
             autoFocus
             spellCheck
