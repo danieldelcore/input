@@ -31,8 +31,8 @@ const onKeyDown = (event, editor, next) => {
     }
 
     switch (event.key) {
-        case ' ':
-            return onSpace(event, editor, next);
+        // case ' ':
+        //     return onSpace(event, editor, next);
         case 'Backspace':
             return onBackspace(event, editor, next);
         case 'Enter':
@@ -131,6 +131,28 @@ const onEnter = (event, editor, next) => {
     editor.splitBlock().setBlocks('paragraph');
 };
 
+const InlineTypedMarkDetectorPlugin = options => {
+    return {
+        onKeyDown: (event, editor, next) => {
+            console.log('EEEEEEEEEEEEEEEEEEEEEEE');
+
+            if (event.key !== ' ') return next();
+
+            console.log('KHAJSDHSADDKHKJDASHKDSHSHDKJKJA');
+
+            const { text } = editor.value.startBlock;
+
+            if (/`+.+`/.test(str)) {
+                console.log('hAKSJDHASJKDHAS');
+            }
+            // get range of match
+            // renderMarker at range
+        },
+    };
+};
+
+const plugins = [...InlineTypedMarkDetectorPlugin];
+
 const Editor = forwardRef(({ onChange, value }, ref) => {
     const editorRef = useRef(null);
     const className = useStyles(styles);
@@ -149,6 +171,7 @@ const Editor = forwardRef(({ onChange, value }, ref) => {
             onKeyDown={onKeyDown}
             renderBlock={renderBlock}
             renderMark={renderMark}
+            plugins={plugins}
             schema={schema}
             onChange={value => onChange(value)}
             autoFocus
