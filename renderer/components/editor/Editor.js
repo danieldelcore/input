@@ -48,8 +48,9 @@ const onSpace = (event, editor, next) => {
 
     if (selection.isExpanded) return next();
 
-    const { start } = selection;
-    const chars = startBlock.text.slice(0, start.offset).replace(/\s*/g, '');
+    const chars = startBlock.text
+        .slice(0, selection.start.offset)
+        .replace(/\s*/g, '');
     const type = getBlockType(chars);
 
     if (!type) return next();
@@ -57,25 +58,27 @@ const onSpace = (event, editor, next) => {
 
     event.preventDefault();
 
-    if (type === 'separator') {
+    if (type === 'separator' || type === 'image') {
         editor
             .moveFocusToStartOfNode(startBlock)
             .delete()
-            .setBlocks({ type: 'separator' })
+            .setBlocks({ type })
             .insertBlock('paragraph');
-    } else {
-        editor.setBlocks(type);
 
-        if (type === 'list-item') {
-            editor.wrapBlock('bulleted-list');
-        }
-
-        if (type === 'ordered-list-item') {
-            editor.wrapBlock('ordered-list');
-        }
-
-        editor.moveFocusToStartOfNode(startBlock).delete();
+        return next();
     }
+
+    editor.setBlocks(type);
+
+    if (type === 'list-item') {
+        editor.wrapBlock('bulleted-list');
+    }
+
+    if (type === 'ordered-list-item') {
+        editor.wrapBlock('ordered-list');
+    }
+
+    editor.moveFocusToStartOfNode(startBlock).delete();
 };
 
 const onBackspace = (event, editor, next) => {
