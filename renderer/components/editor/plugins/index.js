@@ -1,3 +1,4 @@
-import instantReplace from './instantReplace';
+import instantReplaceMark from './instant-replace-mark';
+import instantReplaceBlock from './instant-replace-block';
 
-export { instantReplace };
+export { instantReplaceMark, instantReplaceBlock };

@@ -1,17 +1,56 @@
-import { instantReplace } from './plugins';
+import { instantReplaceMark, instantReplaceBlock } from './plugins';
+
+function getDecimalCounterpart(num) {
+    switch (num) {
+        case 1:
+            return 'one';
+        case 2:
+            return 'two';
+        case 3:
+            return 'three';
+        case 4:
+            return 'four';
+        case 5:
+            return 'five';
+        case 6:
+            return 'six';
+        default:
+            break;
+    }
+}
 
 const plugins = [
-    instantReplace({
+    instantReplaceBlock({
+        pattern: /^#{1,6}\s*.+/,
+        passive: false,
+        block: str => {
+            const length = (str.match(/#/g) || []).length;
+            const number = getDecimalCounterpart(length);
+
+            return `heading-${number}`;
+        },
+        onFormat: str => {
+            const length = (str.match(/#/g) || []).length;
+            return str.substr(length);
+        },
+    }),
+    instantReplaceBlock({
+        triggerKey: ' ',
+        pattern: /^(>)/,
+        block: 'block-quote',
+        onFormat: str => str.substr(1),
+    }),
+    instantReplaceMark({
         pattern: /\`+.+\`/,
         mark: 'code',
         onFormat: str => str.substr(1).slice(0, -1),
     }),
-    instantReplace({
+    instantReplaceMark({
         pattern: /\*+.+\*/,
         mark: 'bold',
         onFormat: str => str.substr(1).slice(0, -1),
     }),
-    instantReplace({
+    instantReplaceMark({
         pattern: /\_+.+\_/,
         mark: 'emphasis',
         onFormat: str => str.substr(1).slice(0, -1),

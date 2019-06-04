@@ -1,11 +1,11 @@
-const instantReplace = ({
+const instantReplaceMark = ({
     triggerKey = ' ',
     pattern,
     mark,
     onFormat = () => {},
 }) => ({
     onKeyDown: (event, editor, next) => {
-        if (event.key !== triggerKey) return next();
+        if (event.key.toLowerCase() !== triggerKey.toLowerCase()) return next();
 
         const { text } = editor.value.startText;
         const match = pattern.exec(text);
@@ -25,4 +25,4 @@ const instantReplace = ({
     },
 });
 
-export default instantReplace;
+export default instantReplaceMark;
