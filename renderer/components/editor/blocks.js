@@ -33,6 +33,8 @@ const renderBlock = (props, editor, next) => {
     const { attributes, children, node } = props;
 
     switch (node.type) {
+        case 'paragraph':
+            return <p {...attributes}>{children}</p>;
         case 'block-quote':
             return <blockquote {...attributes}>{children}</blockquote>;
         case 'bulleted-list':
