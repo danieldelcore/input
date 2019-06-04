@@ -12,6 +12,7 @@ import { useStyles, styleCollector } from 'trousers';
 import schema from './schema';
 import { getMarkType, renderMark } from './marks';
 import { getBlockType, renderBlock } from './blocks';
+import plugins from './plugins-config';
 
 const styles = styleCollector('editor').element`
         width: 100%;
@@ -147,6 +148,7 @@ const Editor = forwardRef(({ onChange, value }, ref) => {
             renderBlock={renderBlock}
             renderMark={renderMark}
             schema={schema}
+            plugins={plugins}
             onChange={value => onChange(value)}
             autoFocus
             spellCheck
