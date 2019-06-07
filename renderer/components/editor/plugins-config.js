@@ -1,4 +1,8 @@
-import { instantReplaceMark, instantReplaceBlock } from './plugins';
+import {
+    instantReplaceMark,
+    instantReplaceBlock,
+    instantList,
+} from './plugins';
 
 function getDecimalCounterpart(num) {
     switch (num) {
@@ -66,6 +70,11 @@ const plugins = [
         pattern: /\_+.+\_/,
         mark: 'emphasis',
         onFormat: str => str.substr(1).slice(0, -1),
+    }),
+    instantList({
+        pattern: /^\-/,
+        list: 'bulleted-list',
+        item: 'list-item',
     }),
 ];
 
