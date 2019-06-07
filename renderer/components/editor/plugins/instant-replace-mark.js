@@ -1,11 +1,13 @@
+import { detectTrigger } from './common';
+
 const instantReplaceMark = ({
-    triggerKey = ' ',
+    triggers = ' ',
     pattern,
     mark,
     onFormat = () => {},
 }) => ({
     onKeyDown: (event, editor, next) => {
-        if (event.key.toLowerCase() !== triggerKey.toLowerCase()) return next();
+        if (!detectTrigger(event.key, triggers)) return next();
 
         const { text } = editor.value.startText;
         const match = pattern.exec(text);
@@ -16,7 +18,7 @@ const instantReplaceMark = ({
 
         editor.deleteBackward(matchText.length);
 
-        const formattedText = onFormat(matchText);
+        const formattedText = onFormat(matchText) || matchText;
 
         editor
             .addMark(mark)

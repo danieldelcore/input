@@ -1,12 +1,14 @@
+import { detectTrigger } from './common';
+
 const instantReplaceBlock = ({
-    triggerKey = 'Enter',
+    triggers = 'Enter',
     pattern,
     block,
     onFormat = () => {},
     passive = true,
 }) => ({
     onKeyDown: (event, editor, next) => {
-        if (event.key.toLowerCase() !== triggerKey.toLowerCase()) return next();
+        if (!detectTrigger(event.key, triggers)) return next();
 
         const { text } = editor.value.startBlock;
         const match = pattern.exec(text);
@@ -17,7 +19,7 @@ const instantReplaceBlock = ({
 
         editor.deleteBackward(matchText.length);
 
-        const formattedText = onFormat(matchText);
+        const formattedText = onFormat(matchText) || matchText;
         const formattedBlock =
             typeof block === 'function'
                 ? block(matchText, formattedText)

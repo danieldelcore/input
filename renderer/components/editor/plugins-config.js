@@ -30,15 +30,27 @@ const plugins = [
             return `heading-${number}`;
         },
         onFormat: str => {
-            const length = (str.match(/#/g) || []).length;
+            let length = (str.match(/#/g) || []).length;
+
+            if (str.charAt(length) === ' ') {
+                length += 1;
+            }
+
             return str.substr(length);
         },
     }),
     instantReplaceBlock({
-        triggerKey: ' ',
+        triggers: ' ',
         pattern: /^(>)/,
         block: 'block-quote',
         onFormat: str => str.substr(1),
+    }),
+    instantReplaceBlock({
+        triggers: [' ', 'Enter'],
+        pattern: /^---/,
+        block: 'separator',
+        passive: false,
+        onFormat: str => str.substr(3),
     }),
     instantReplaceMark({
         pattern: /\`+.+\`/,
