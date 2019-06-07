@@ -76,6 +76,11 @@ const plugins = [
         list: 'bulleted-list',
         item: 'list-item',
     }),
+    instantList({
+        pattern: /^(\d)+\./,
+        list: 'ordered-list',
+        item: 'ordered-list-item',
+    }),
 ];
 
 export default plugins;
