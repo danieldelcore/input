@@ -40,36 +40,42 @@ const plugins = [
                 length += 1;
             }
 
-            return str.substr(length);
+            return str.substring(length);
         },
     }),
     instantReplaceBlock({
-        triggers: ' ',
+        triggers: [' ', 'Enter'],
         pattern: /^(>)/,
         block: 'block-quote',
-        onFormat: str => str.substr(1),
+        onFormat: str => str.substring(1),
+    }),
+    instantReplaceBlock({
+        triggers: [' ', 'Enter'],
+        pattern: /^(```)/,
+        block: 'code-block',
+        onFormat: str => str.substring(3),
     }),
     instantReplaceBlock({
         triggers: [' ', 'Enter'],
         pattern: /^---/,
         block: 'separator',
         passive: false,
-        onFormat: str => str.substr(3),
+        onFormat: str => str.substring(3),
     }),
     instantReplaceMark({
         pattern: /\`+.+\`/,
         mark: 'code',
-        onFormat: str => str.substr(1).slice(0, -1),
+        onFormat: str => str.substring(1).slice(0, -1),
     }),
     instantReplaceMark({
         pattern: /\*+.+\*/,
         mark: 'bold',
-        onFormat: str => str.substr(1).slice(0, -1),
+        onFormat: str => str.substring(1).slice(0, -1),
     }),
     instantReplaceMark({
         pattern: /\_+.+\_/,
         mark: 'emphasis',
-        onFormat: str => str.substr(1).slice(0, -1),
+        onFormat: str => str.substring(1).slice(0, -1),
     }),
     instantList({
         pattern: /^\-/,

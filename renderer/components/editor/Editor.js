@@ -11,7 +11,7 @@ import { useStyles, styleCollector } from 'trousers';
 
 import schema from './schema';
 import { getMarkType, renderMark } from './marks';
-import { getBlockType, renderBlock } from './blocks';
+import { renderBlock } from './blocks';
 import plugins from './plugins-config';
 
 const styles = styleCollector('editor').element`

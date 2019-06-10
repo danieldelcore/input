@@ -18,7 +18,8 @@ const instantReplaceMark = ({
 
         editor.deleteBackward(matchText.length);
 
-        const formattedText = onFormat(matchText) || matchText;
+        const formattedText =
+            typeof onFormat === 'function' ? onFormat(matchText) : matchText;
 
         editor
             .addMark(mark)

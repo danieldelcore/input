@@ -1,34 +1,3 @@
-const getBlockType = chars => {
-    switch (chars) {
-        case '*':
-        case '-':
-        case '+':
-        case '[ ]':
-        case '[x]':
-            return 'list-item';
-        case '1.':
-            return 'ordered-list-item';
-        case '>':
-            return 'block-quote';
-        case '#':
-            return 'heading-one';
-        case '##':
-            return 'heading-two';
-        case '###':
-            return 'heading-three';
-        case '####':
-            return 'heading-four';
-        case '#####':
-            return 'heading-five';
-        case '######':
-            return 'heading-six';
-        case '---':
-            return 'separator';
-        default:
-            return null;
-    }
-};
-
 const renderBlock = (props, editor, next) => {
     const { attributes, children, node } = props;
 
@@ -37,6 +6,12 @@ const renderBlock = (props, editor, next) => {
             return <p {...attributes}>{children}</p>;
         case 'block-quote':
             return <blockquote {...attributes}>{children}</blockquote>;
+        case 'code-block':
+            return (
+                <pre {...addEventListener}>
+                    <code>{children}</code>
+                </pre>
+            );
         case 'bulleted-list':
             return <ul {...attributes}>{children}</ul>;
         case 'ordered-list':
@@ -63,4 +38,4 @@ const renderBlock = (props, editor, next) => {
     }
 };
 
-export { renderBlock, getBlockType };
+export { renderBlock };
