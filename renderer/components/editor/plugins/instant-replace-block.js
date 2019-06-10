@@ -11,21 +11,16 @@ const instantReplaceBlock = ({
         if (!detectTrigger(event.key, triggers)) return next();
 
         const { text } = editor.value.startBlock;
-        const match = pattern.exec(text);
 
-        if (!match) return next();
+        if (!pattern.test(text)) return next();
 
-        const matchText = match[0];
-
-        editor.deleteBackward(matchText.length);
+        editor.deleteBackward(text.length);
 
         const formattedText =
-            typeof onFormat === 'function' ? onFormat(matchText) : matchText;
+            typeof onFormat === 'function' ? onFormat(text) : text;
 
         const formattedBlock =
-            typeof block === 'function'
-                ? block(matchText, formattedText)
-                : block;
+            typeof block === 'function' ? block(text, formattedText) : block;
 
         editor.setBlocks(formattedBlock).insertText(formattedText);
 
