@@ -5,6 +5,7 @@ const isDev = require('electron-is-dev');
 
 const menu = require('./menu');
 const { showOpenDialog, showSaveDialog } = require('./file');
+const { serialize } = require('./serializer');
 
 let mainWindow;
 
@@ -14,7 +15,7 @@ function createWindow() {
     Menu.setApplicationMenu(menuTemplate);
 
     mainWindow = new BrowserWindow({
-        width: 380,
+        width: 500,
         height: 500,
         webPreferences: {
             nodeIntegration: true,
@@ -59,6 +60,8 @@ app.on('open-file', (event, path) => {
     showOpenDialog().then(data => console.log(data));
 });
 
-ipcMain.on('save-file', (event, document) => {
-    showSaveDialog(document).catch(err => console.log(err));
+ipcMain.on('save-file', (event, value) => {
+    const serializedDocument = serialize(value.document);
+
+    showSaveDialog(serializedDocument).catch(err => console.log(err));
 });

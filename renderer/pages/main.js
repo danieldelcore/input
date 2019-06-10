@@ -59,19 +59,28 @@ const MainPage = () => {
         );
 
         ipcRenderer.on('file-saved', (event, message) =>
-            ipcRenderer.send('save-file', state.value),
+            ipcRenderer.send('save-file', state.value.toJSON()),
         );
 
         ipcRenderer.on('format-mark', (event, message) =>
             editorRef.current.toggleMark(message),
         );
-    }, []);
+
+        return () => {
+            ipcRenderer.removeAllListeners('file-opened');
+            ipcRenderer.removeAllListeners('file-saved');
+            ipcRenderer.removeAllListeners('format-mark');
+        };
+    }, [state.value]);
 
     return (
         <Editor
             ref={editorRef}
             value={state.value}
-            onChange={value => setState({ value })}
+            onChange={change => {
+                console.log('onChange', change.value.toJSON().document);
+                setState({ value: change.value });
+            }}
         />
     );
 };

@@ -54,7 +54,7 @@ const Editor = forwardRef(({ onChange, value }, ref) => {
             renderMark={renderMark}
             schema={schema}
             plugins={plugins}
-            onChange={value => onChange(value)}
+            onChange={change => onChange(change)}
             autoFocus
             spellCheck
         />
