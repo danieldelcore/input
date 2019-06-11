@@ -2,20 +2,15 @@
 
 ## TODO
 
--   [ ] encode / decode to markdown on save / open
--   [ ] "Small" save dialog instead of the large one
--   [ ] drop SSR, its not required
+-   [ ] decode markdown to slate
 -   [ ] side navigation
 
 ### Syntax
 
--   [x] support ordered lists
 -   [ ] support nested lists
--   [ ] support code blocks
 -   [ ] support tables
 -   [ ] Links!
 -   [ ] Images!
--   [ ] support inline syntax input experience
 
 ## Resources
 
