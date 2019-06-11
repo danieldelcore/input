@@ -5,7 +5,6 @@ const isDev = require('electron-is-dev');
 
 const menu = require('./menu');
 const { showOpenDialog, showSaveDialog } = require('./file');
-const { serialize } = require('./serializer');
 
 let mainWindow;
 
@@ -54,14 +53,15 @@ app.on('activate', () => {
 });
 
 /**
+ * Emitted when the user wants to open a URL with the application.
  * https://electronjs.org/docs/api/app#event-open-url-macos
  */
 app.on('open-file', (event, path) => {
-    showOpenDialog().then(data => console.log(data));
+    showOpenDialog()
+        .then(data => mainWindow.webContents.send('file-opened', data))
+        .catch(err => console.log(err));
 });
 
-ipcMain.on('save-file', (event, value) => {
-    const serializedDocument = serialize(value.document);
-
-    showSaveDialog(serializedDocument).catch(err => console.log(err));
+ipcMain.on('save-file', (event, document) => {
+    showSaveDialog(document).catch(err => console.log(err));
 });

@@ -48,7 +48,7 @@ const Editor = forwardRef(({ onChange, value }, ref) => {
         <SlateEditor
             ref={editorRef}
             className={className}
-            defaultValue={value}
+            value={value}
             onKeyDown={onKeyDown}
             renderBlock={renderBlock}
             renderMark={renderMark}

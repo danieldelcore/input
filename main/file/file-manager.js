@@ -3,7 +3,7 @@ const { dialog, BrowserWindow } = require('electron');
 const fileService = require('./file-service');
 
 const showOpenDialog = defaultPath =>
-    new Promise(resolve => {
+    new Promise((resolve, reject) => {
         dialog.showOpenDialog(
             {
                 defaultPath,
@@ -17,11 +17,14 @@ const showOpenDialog = defaultPath =>
             },
             filePaths => {
                 if (!filePaths || filePaths.length === 0) {
-                    resolve();
+                    reject('cancelled');
                     return;
                 }
 
-                resolve(fileService.open(filePaths[0]));
+                fileService
+                    .open(filePaths[0])
+                    .then(data => resolve(data))
+                    .catch(err => reject(err));
             },
         );
     });

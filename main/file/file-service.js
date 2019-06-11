@@ -1,22 +1,12 @@
+const util = require('util');
 const path = require('path');
 const fs = require('fs');
 
-const open = path =>
-    new Promise((resolve, reject) => {
-        fs.readFile(path, 'utf-8', (err, data) => {
-            if (err) reject(err);
+const readFile = util.promisify(fs.readFile);
+const writeFile = util.promisify(fs.writeFile);
 
-            resolve(data);
-        });
-    });
-
-const save = (path, data) =>
-    new Promise((resolve, reject) => {
-        fs.writeFile(path, data, 'utf-8', err => {
-            if (err) reject(err);
-            resolve();
-        });
-    });
+const open = path => readFile(path, 'utf-8');
+const save = (path, data) => writeFile(path, data, 'utf-8');
 
 module.exports = {
     open,

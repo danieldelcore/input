@@ -3,7 +3,7 @@ import { useGlobal, css } from 'trousers';
 import { ipcRenderer } from 'electron';
 import { Value } from 'slate';
 
-import { Editor } from '../components';
+import { Editor, editorSerializer } from '../components';
 
 const globals = css`
     * {
@@ -54,13 +54,17 @@ const MainPage = () => {
     useEffect(() => {
         if (!ipcRenderer) return;
 
-        ipcRenderer.on('file-opened', (event, message) =>
-            setState({ value: message }),
-        );
+        ipcRenderer.on('file-opened', (event, message) => {
+            setState({
+                value: editorSerializer.deserialize(message),
+            });
+        });
 
-        ipcRenderer.on('file-saved', (event, message) =>
-            ipcRenderer.send('save-file', state.value.toJSON()),
-        );
+        ipcRenderer.on('file-saved', event => {
+            const value = editorSerializer.serialize(state.value);
+
+            ipcRenderer.send('save-file', value);
+        });
 
         ipcRenderer.on('format-mark', (event, message) =>
             editorRef.current.toggleMark(message),
@@ -77,10 +81,7 @@ const MainPage = () => {
         <Editor
             ref={editorRef}
             value={state.value}
-            onChange={change => {
-                console.log('onChange', change.value.toJSON().document);
-                setState({ value: change.value });
-            }}
+            onChange={change => setState({ value: change.value })}
         />
     );
 };

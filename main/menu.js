@@ -1,6 +1,7 @@
 const { app, shell, ipcMain } = require('electron');
 const { is, openNewGitHubIssue } = require('electron-util');
 
+const package = require('../package.json');
 const { showOpenDialog } = require('./file');
 
 const menu = [
@@ -15,9 +16,11 @@ const menu = [
                 label: 'Open',
                 accelerator: 'CmdOrCtrl+O',
                 click: (menuItem, mainWindow) => {
-                    showOpenDialog().then(data =>
-                        mainWindow.webContents.send('file-opened', data),
-                    );
+                    showOpenDialog()
+                        .then(data =>
+                            mainWindow.webContents.send('file-opened', data),
+                        )
+                        .catch(err => console.log(err));
                 },
             },
             { type: 'separator' },
@@ -108,8 +111,7 @@ const menu = [
         submenu: [
             {
                 label: 'Learn More...',
-                click: () =>
-                    shell.openExternalSync('https://github.com/zeropoly/input'),
+                click: () => shell.openExternalSync(package.repository),
             },
             {
                 label: 'Give Feedback...',
