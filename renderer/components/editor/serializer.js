@@ -52,7 +52,7 @@ const rules = [
                         return <blockquote>{children}</blockquote>;
                     case 'code-block':
                         return (
-                            <pre {...addEventListener}>
+                            <pre>
                                 <code>{children}</code>
                             </pre>
                         );
@@ -77,6 +77,8 @@ const rules = [
                         return <li>{children}</li>;
                     case 'separator':
                         return <hr />;
+                    default:
+                        break;
                 }
             }
         },

@@ -2,7 +2,6 @@
 
 ## TODO
 
--   [ ] decode markdown to slate
 -   [ ] side navigation
 
 ### Syntax

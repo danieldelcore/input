@@ -8,7 +8,7 @@ const renderBlock = (props, editor, next) => {
             return <blockquote {...attributes}>{children}</blockquote>;
         case 'code-block':
             return (
-                <pre {...addEventListener}>
+                <pre {...attributes}>
                     <code>{children}</code>
                 </pre>
             );
