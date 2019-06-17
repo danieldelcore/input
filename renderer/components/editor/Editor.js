@@ -21,6 +21,17 @@ const styles = styleCollector('editor').element`
         padding: 20px;
     `;
 
+const onBackspace = (event, editor, next) => {
+    const { value } = editor;
+    const { selection, startBlock } = value;
+
+    if (selection.isExpanded) return next();
+    if (selection.start.offset !== 0) return next();
+    if (startBlock.type === 'paragraph') return next();
+
+    event.preventDefault();
+    editor.setBlocks('paragraph');
+};
 const onKeyDown = (event, editor, next) => {
     if (event.ctrlKey || event.metaKey) {
         const mark = getMarkType(event.key);
@@ -31,7 +42,12 @@ const onKeyDown = (event, editor, next) => {
         }
     }
 
-    return next();
+    switch (event.key) {
+        case 'Backspace':
+            return onBackspace(event, editor, next);
+        default:
+            return next();
+    }
 };
 
 const Editor = forwardRef(({ onChange, value }, ref) => {
