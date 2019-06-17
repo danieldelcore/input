@@ -32,6 +32,34 @@ const onBackspace = (event, editor, next) => {
     event.preventDefault();
     editor.setBlocks('paragraph');
 };
+
+const onEnter = (event, editor, next) => {
+    const { value } = editor;
+    const { selection, startBlock } = value;
+    const { start, end, isExpanded } = selection;
+
+    if (isExpanded) return next();
+    if (start.offset === 0 && startBlock.text.length === 0)
+        return onBackspace(event, editor, next);
+    if (end.offset !== startBlock.text.length) return next();
+
+    if (
+        startBlock.type !== 'heading-one' &&
+        startBlock.type !== 'heading-two' &&
+        startBlock.type !== 'heading-three' &&
+        startBlock.type !== 'heading-four' &&
+        startBlock.type !== 'heading-five' &&
+        startBlock.type !== 'heading-six' &&
+        startBlock.type !== 'block-quote' &&
+        startBlock.type !== 'code'
+    ) {
+        return next();
+    }
+
+    event.preventDefault();
+    editor.splitBlock().setBlocks('paragraph');
+};
+
 const onKeyDown = (event, editor, next) => {
     if (event.ctrlKey || event.metaKey) {
         const mark = getMarkType(event.key);
@@ -45,6 +73,8 @@ const onKeyDown = (event, editor, next) => {
     switch (event.key) {
         case 'Backspace':
             return onBackspace(event, editor, next);
+        case 'Enter':
+            return onEnter(event, editor, next);
         default:
             return next();
     }
