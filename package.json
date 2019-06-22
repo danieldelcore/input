@@ -1,5 +1,5 @@
 {
-    "name": "input",
+    "name": "@zeropoly/input",
     "version": "1.0.0",
     "description": "A minimalist's markdown editor",
     "main": "main/index.js",
