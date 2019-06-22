@@ -51,7 +51,7 @@ const onEnter = (event, editor, next) => {
         startBlock.type !== 'heading-five' &&
         startBlock.type !== 'heading-six' &&
         startBlock.type !== 'block-quote' &&
-        startBlock.type !== 'code'
+        startBlock.type !== 'code-block'
     ) {
         return next();
     }
