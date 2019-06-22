@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
+import { theme, ThemeProvider } from '@zeropoly/geometric';
 import { useGlobal, css } from 'trousers';
 import { ipcRenderer } from 'electron';
 import { Value } from 'slate';
@@ -6,10 +7,6 @@ import { Value } from 'slate';
 import { Editor, editorSerializer } from '../components';
 
 const globals = css`
-    * {
-        box-sizing: border-box;
-    }
-
     ::-webkit-scrollbar {
         display: none;
     }
@@ -25,6 +22,7 @@ const globals = css`
 
 const MainPage = () => {
     const clearGlobals = useGlobal(globals);
+    const editorRef = useRef(null);
 
     const [state, setState] = useState({
         value: Value.fromJSON({
@@ -46,8 +44,6 @@ const MainPage = () => {
             },
         }),
     });
-
-    const editorRef = useRef(null);
 
     useEffect(() => () => clearGlobals(), []);
 
@@ -78,11 +74,13 @@ const MainPage = () => {
     }, [state.value]);
 
     return (
-        <Editor
-            ref={editorRef}
-            value={state.value}
-            onChange={change => setState({ value: change.value })}
-        />
+        <ThemeProvider theme={theme}>
+            <Editor
+                ref={editorRef}
+                value={state.value}
+                onChange={change => setState({ value: change.value })}
+            />
+        </ThemeProvider>
     );
 };
 

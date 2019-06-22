@@ -1,21 +1,9 @@
+import { Code, Blockquote } from '@zeropoly/geometric';
+
 const renderBlock = (props, editor, next) => {
     const { attributes, children, node } = props;
 
     switch (node.type) {
-        case 'paragraph':
-            return <p {...attributes}>{children}</p>;
-        case 'block-quote':
-            return <blockquote {...attributes}>{children}</blockquote>;
-        case 'code-block':
-            return (
-                <pre {...attributes}>
-                    <code>{children}</code>
-                </pre>
-            );
-        case 'bulleted-list':
-            return <ul {...attributes}>{children}</ul>;
-        case 'ordered-list':
-            return <ol {...attributes}>{children}</ol>;
         case 'heading-one':
             return <h1 {...attributes}>{children}</h1>;
         case 'heading-two':
@@ -28,6 +16,16 @@ const renderBlock = (props, editor, next) => {
             return <h5 {...attributes}>{children}</h5>;
         case 'heading-six':
             return <h6 {...attributes}>{children}</h6>;
+        case 'paragraph':
+            return <p {...attributes}>{children}</p>;
+        case 'block-quote':
+            return <Blockquote {...attributes}>{children}</Blockquote>;
+        case 'code-block':
+            return <Code {...attributes}>{children}</Code>;
+        case 'bulleted-list':
+            return <ul {...attributes}>{children}</ul>;
+        case 'ordered-list':
+            return <ol {...attributes}>{children}</ol>;
         case 'list-item':
         case 'ordered-list-item':
             return <li {...attributes}>{children}</li>;

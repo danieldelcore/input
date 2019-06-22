@@ -1,3 +1,5 @@
+import { Code } from '@zeropoly/geometric';
+
 const getMarkType = key => {
     switch (key) {
         case 'b':
@@ -28,7 +30,11 @@ const renderMark = (props, editor, next) => {
         case 'strike':
             return <strike {...attributes}>{children}</strike>;
         case 'code':
-            return <code {...attributes}>{children}</code>;
+            return (
+                <Code inline {...attributes}>
+                    {children}
+                </Code>
+            );
         case 'anchor':
             return <a {...attributes}>{children}</a>;
         default:

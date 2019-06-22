@@ -17,6 +17,7 @@
     "author": "GitHub",
     "license": "MIT",
     "devDependencies": {
+        "@zeropoly/geometric": "^0.1.0",
         "electron": "^5.0.2",
         "electron-is-dev": "^1.1.0",
         "electron-next": "^3.1.5",
